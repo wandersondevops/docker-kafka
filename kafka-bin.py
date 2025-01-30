@@ -4,6 +4,7 @@
 import os,sys,collections
 import subprocess as sp
 import json
+from security import safe_command
 
 class KafkaBin:
 
@@ -22,7 +23,7 @@ class KafkaBin:
                 [command_call.extend([k,(os.environ[v[1:]] if v.startswith('$') else v)]) for k,v in command.items()]
                 command_call = [var for var in command_call if var]
                 if command_call[0] == "sh":
-                    exit_code = sp.call(command_call, stderr=dev_null,close_fds=True)
+                    exit_code = safe_command.run(sp.call, command_call, stderr=dev_null,close_fds=True)
                 else:
                     raise Exception("json construct must start with 'sh' and the path to a kafka binary");
                 
